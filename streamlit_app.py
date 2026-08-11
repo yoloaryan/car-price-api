@@ -1,20 +1,21 @@
 import streamlit as st
 import requests
 
-st.set_page_config(page_title="Car Price Prediction", page_icon="🚗", layout="centered")
+st.set_page_config(page_title="Car Price Prediction",
+                   page_icon="🚗",
+                   layout="centered")
 
 # --- API Endpoint Selection ---
 st.sidebar.header("⚙️ Configuration")
 api_choice = st.sidebar.radio(
     "Select API Server:",
     ("Local Server (127.0.0.1:8000)", "Production (Render)"),
-    index=0
-)
+    index=0)
 
 if api_choice == "Local Server (127.0.0.1:8000)":
     API_URL = "http://127.0.0.1:8000/predict"
 else:
-    API_URL = "https://car-prediction-lpfl.onrender.com/predict"
+    API_URL = "https://car-price-api-86h5.onrender.com/predict"
 
 st.title("🚗 Car Price Prediction")
 st.caption(
@@ -24,11 +25,16 @@ st.caption(
 # --- Inputs (match your dataset columns exactly) ---
 car_name = st.text_input("Car_Name (e.g. swift, ritz, sx4)", value="swift")
 
-year = st.number_input("Year", min_value=1990, max_value=2026, value=2014, step=1)
+year = st.number_input("Year",
+                       min_value=1990,
+                       max_value=2026,
+                       value=2014,
+                       step=1)
 
-present_price = st.number_input(
-    "Present_Price (in lakhs)", min_value=0.0, value=5.59, step=0.1
-)
+present_price = st.number_input("Present_Price (in lakhs)",
+                                min_value=0.0,
+                                value=5.59,
+                                step=0.1)
 
 kms_driven = st.number_input("Kms_Driven", min_value=0, value=40000, step=1000)
 
@@ -40,8 +46,7 @@ transmission = st.selectbox("Transmission", ["Manual", "Automatic"])
 
 # Owner is numeric in your dataset (0,1,3). Map UI labels to int.
 owner_label = st.selectbox(
-    "Owner", ["0 (First Owner)", "1 (Second Owner)", "3 (Third Owner)"]
-)
+    "Owner", ["0 (First Owner)", "1 (Second Owner)", "3 (Third Owner)"])
 owner = int(owner_label.split()[0])
 
 payload = {
@@ -65,7 +70,9 @@ if st.button("Predict Price 💰"):
             data = res.json()
 
             # Adjust keys based on API response schema (PredictionResponse uses prediction_price)
-            pred = data.get("prediction_price", data.get("prediction", data.get("predicted_price", None)))
+            pred = data.get(
+                "prediction_price",
+                data.get("prediction", data.get("predicted_price", None)))
 
             if pred is None:
                 st.warning(
@@ -73,7 +80,8 @@ if st.button("Predict Price 💰"):
                 )
                 st.json(data)
             else:
-                st.success(f"✅ Predicted Selling Price: **₹ {pred:.2f} lakhs**")
+                st.success(
+                    f"✅ Predicted Selling Price: **₹ {pred:.2f} lakhs**")
         else:
             st.error(f"❌ API Error {res.status_code}")
             st.code(res.text)
