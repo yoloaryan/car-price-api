@@ -64,27 +64,28 @@ st.write("### Payload being sent:")
 st.json(payload)
 
 if st.button("Predict Price 💰"):
-    try:
-        res = requests.post(API_URL, json=payload, timeout=20)
-        if res.status_code == 200:
-            data = res.json()
+    with st.spinner("Connecting to API backend (Render cold-start may take up to 60s)..."):
+        try:
+            res = requests.post(API_URL, json=payload, timeout=60)
+            if res.status_code == 200:
+                data = res.json()
 
-            # Adjust keys based on API response schema (PredictionResponse uses prediction_price)
-            pred = data.get(
-                "prediction_price",
-                data.get("prediction", data.get("predicted_price", None)))
+                # Adjust keys based on API response schema (PredictionResponse uses prediction_price)
+                pred = data.get(
+                    "prediction_price",
+                    data.get("prediction", data.get("predicted_price", None)))
 
-            if pred is None:
-                st.warning(
-                    "API responded but prediction key not found. Full response below:"
-                )
-                st.json(data)
+                if pred is None:
+                    st.warning(
+                        "API responded but prediction key not found. Full response below:"
+                    )
+                    st.json(data)
+                else:
+                    st.success(
+                        f"✅ Predicted Selling Price: **₹ {pred:.2f} lakhs**")
             else:
-                st.success(
-                    f"✅ Predicted Selling Price: **₹ {pred:.2f} lakhs**")
-        else:
-            st.error(f"❌ API Error {res.status_code}")
-            st.code(res.text)
-    except requests.exceptions.RequestException as e:
-        st.error("❌ Could not connect to API. Is FastAPI running?")
-        st.code(str(e))
+                st.error(f"❌ API Error {res.status_code}")
+                st.code(res.text)
+        except requests.exceptions.RequestException as e:
+            st.error("❌ Could not connect to API. Server may still be waking up or offline.")
+            st.code(str(e))
