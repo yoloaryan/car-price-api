@@ -6,7 +6,7 @@
 [![Scikit-Learn](https://img.shields.io/badge/scikit_learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
 [![Render](https://img.shields.io/badge/Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://render.com/)
 
-A full-stack Machine Learning application for predicting used car selling prices. Built with **FastAPI** for a robust RESTful API backend, **Scikit-Learn (Random Forest)** for inference, and an interactive **Streamlit** web application for frontend user interactions.
+A full-stack Machine Learning application for predicting used car selling prices. Built with **FastAPI** for a robust RESTful API backend, **Scikit-Learn (Random Forest)** for inference, and an interactive **Streamlit** web application for frontend user interaction.
 
 ---
 
